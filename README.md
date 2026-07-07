@@ -96,6 +96,10 @@ flowchart TB
 ```
 
 ---
+Request Flow :
+<img width="2130" height="1014" alt="image" src="https://github.com/user-attachments/assets/09154420-6f1b-49fc-9b61-d7ae0b80b99e" />
+
+
 
 
 
@@ -103,24 +107,8 @@ flowchart TB
 
 Messages are delivered using WebSockets.
 
-sequenceDiagram
+<img width="2638" height="1014" alt="image" src="https://github.com/user-attachments/assets/ed0d851c-570d-45e4-995d-aadea7785b1d" />
 
-    participant Client as React Client
-    participant Gateway as Nginx
-    participant Chat as Chat Service
-    participant DB as PostgreSQL
-    participant Redis as Redis Pub/Sub
-    participant Users as Other Connected Users
-
-    Client->>Gateway: WebSocket Connect + JWT
-    Gateway->>Chat: Forward Connection
-
-    Client->>Chat: Send Message
-    Chat->>DB: Save Message
-    Chat->>Redis: Publish Message Event
-
-    Redis->>Chat: Broadcast Event
-    Chat->>Users: Push Message via WebSocket
 
 
 
