@@ -97,52 +97,12 @@ flowchart TB
 
 ---
 
-# 🔐 Authentication Flow
 
-The authentication flow uses JWT tokens.
-
-```mermaid
-sequenceDiagram
-
-    participant User
-    participant Client as React Client
-    participant Gateway as Nginx
-    participant Auth as Auth Service
-    participant DB as PostgreSQL
-
-
-    User->>Client: Enter credentials
-
-    Client->>Gateway:
-    POST /api/auth/login
-
-    Gateway->>Auth:
-    Forward Request
-
-    Auth->>DB:
-    Validate User
-
-    DB-->>Auth:
-    User Details
-
-    Auth->>Auth:
-    Generate JWT Token
-
-    Auth-->>Client:
-    Return JWT
-
-    Client->>Client:
-    Store Token
-
-```
-
----
 
 # 💬 Real-Time Messaging Flow
 
 Messages are delivered using WebSockets.
 
-```mermaid
 sequenceDiagram
 
     participant Client as React Client
@@ -150,37 +110,21 @@ sequenceDiagram
     participant Chat as Chat Service
     participant DB as PostgreSQL
     participant Redis as Redis Pub/Sub
-    participant Users as Connected Users
+    participant Users as Other Connected Users
+
+    Client->>Gateway: WebSocket Connect + JWT
+    Gateway->>Chat: Forward Connection
+
+    Client->>Chat: Send Message
+    Chat->>DB: Save Message
+    Chat->>Redis: Publish Message Event
+
+    Redis->>Chat: Broadcast Event
+    Chat->>Users: Push Message via WebSocket
 
 
-    Client->>Gateway:
-    WebSocket Connection + JWT
 
 
-    Gateway->>Chat:
-    Forward Connection
-
-
-    Client->>Chat:
-    Send Message
-
-
-    Chat->>DB:
-    Save Message
-
-
-    Chat->>Redis:
-    Publish Event
-
-
-    Redis->>Chat:
-    Broadcast Event
-
-
-    Chat->>Users:
-    Push Message
-
-```
 
 ---
 
